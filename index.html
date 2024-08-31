@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset=utf-8>
+  <title>sigma files (sigma as flip!!)</title>
+  <script src="/jquery.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+</head>
+ <body>
+  <font size="+3">
+ <h1>filez</h1>
+ <hr>
+ <ul id="files">
+ <li id="tempload"><a>Loading...</a></li>
+ </ul>
+ <hr>
+ <script>
+  folder = window.location.href.split('/').slice(-2, -1)
+  //if (window.location.pathname == "/sigma%20sigma%20on%20the%20wall") {
+  //  window.location.pathname='/'
+  //}
+  if (folder == window.location.href.split('/').slice(-2, -1)[0] == window.location.host || window.location.href.split('/').slice(-2, -1)[0] == window.location.hostname) {
+      $.get(window.location.origin+"/api/getFiles", (data, status) => {
+      //console.log(data[0]);
+      files = []
+      folders = []
+      data.forEach(element => {
+        // file = 1 folder = 0
+        //console.log(element)
+        if (element[1] == 1) {
+          console.log("FILE: " + element[0])
+          console.log(typeof element[0])
+          files.push(element[0].split('/').pop())
+        }
+        if (element[1] == 0) {
+          console.log("FOLDER: " + element[0])
+          folders.push(element[0].split('/').pop())
+        }
+      });
+      document.getElementById('tempload').remove()
+      folders.forEach(element => {
+          console.log("Folder added to list as: " + element + "/")
+          document.getElementById('files').innerHTML += '<li><a href='+window.location.origin+'/'+encodeURIComponent(element)+'>'+element+'/</a></li>'
+      });
+      files.forEach(element => {
+          console.log("File added to list as: " + element)
+          document.getElementById('files').innerHTML += '<li><a href='+window.location.origin+'/'+encodeURIComponent(element)+'>'+element+'</a></li>'
+      });
+    });
+  }
+  else {
+    folderpath = ''
+    window.location.href.split('/').slice(-99999, -1).slice(3).forEach(element => {
+      folderpath+=element+'/'
+    });
+    $.get(window.location.origin+"/api/getFiles/" + folderpath, (data, status) => {
+      //console.log(data[0]);
+      files = []
+      folders = []
+      data.forEach(element => {
+        // file = 1 folder = 0
+        //console.log(element)
+        if (element[1] == 1) {
+          console.log("FILE: " + element[0])
+          console.log(typeof element[0])
+          files.push(element[0].split('/').pop())
+        }
+        if (element[1] == 0) {
+          console.log("FOLDER: " + element[0])
+          folders.push(element[0].split('/').pop())
+        }
+      });
+      document.getElementById('tempload').remove()
+      folders.forEach(element => {
+          console.log("Folder added to list as: " + element + "/")
+          document.getElementById('files').innerHTML += '<li><a href='+window.location.href+encodeURIComponent(element)+'>'+element+'/</a></li>'
+      });
+      files.forEach(element => {
+          console.log("File added to list as: " + element)
+          document.getElementById('files').innerHTML += '<li><a href='+window.location.href+encodeURIComponent(element)+'>'+element+'</a></li>'
+      });
+    });
+  }
+  
+  
+</script>
+</font>
+</body>
+</html>
